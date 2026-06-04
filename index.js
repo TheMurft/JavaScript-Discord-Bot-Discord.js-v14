@@ -112,6 +112,14 @@ client.once('ready', () => {
   console.log(`[LOG] Prefix: "${client.prefix}" | Commands loaded: ${client.commands.size}`);
 });
 
+// Helper to format welcome/goodbye placeholders
+const formatWelcomeMsg = (template, member) => {
+  return template
+    .replace(/{user}/g, member.toString())
+    .replace(/{server}/g, member.guild.name)
+    .replace(/{count}/g, member.guild.memberCount.toString());
+};
+
 // ─── Welcome ──────────────────────────────────────────────────────────────────
 client.on('guildMemberAdd', async member => {
   const dbPath = path.join(__dirname, 'database.json');
@@ -122,10 +130,13 @@ client.on('guildMemberAdd', async member => {
     if (cfg?.welcome_channel) {
       const channel = member.guild.channels.cache.get(cfg.welcome_channel);
       if (channel) {
+        const rawTemplate = cfg.welcome_message || `Welcome to the server, {user}! We now have **{count}** members.`;
+        const description = formatWelcomeMsg(rawTemplate, member);
+
         const embed = new EmbedBuilder()
           .setColor('#5865F2')
           .setTitle('Welcome!')
-          .setDescription(`Welcome to the server, ${member}! We now have **${member.guild.memberCount}** members.`)
+          .setDescription(description)
           .setThumbnail(member.user.displayAvatarURL({ size: 128 }))
           .setTimestamp();
         await channel.send({ embeds: [embed] }).catch(console.error);
@@ -144,10 +155,13 @@ client.on('guildMemberRemove', async member => {
     if (cfg?.goodbye_channel) {
       const channel = member.guild.channels.cache.get(cfg.goodbye_channel);
       if (channel) {
+        const rawTemplate = cfg.goodbye_message || `**{user}** has left the server. We now have **{count}** members.`;
+        const description = formatWelcomeMsg(rawTemplate, member);
+
         const embed = new EmbedBuilder()
           .setColor('#ED4245')
           .setTitle('Goodbye!')
-          .setDescription(`**${member.user.tag}** has left the server. We now have **${member.guild.memberCount}** members.`)
+          .setDescription(description)
           .setThumbnail(member.user.displayAvatarURL({ size: 128 }))
           .setTimestamp();
         await channel.send({ embeds: [embed] }).catch(console.error);

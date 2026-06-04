@@ -70,6 +70,8 @@ js/
 | Command | Description | Example |
 | :--- | :--- | :--- |
 | `!setupwelcome <#welcome> <#goodbye>` | Configures the welcome and goodbye channels. | `!setupwelcome #welcome #goodbye` |
+| `!setwelcomemsg <message>` | Set a custom welcome message template. | `!setwelcomemsg Welcome {user}!` |
+| `!setgoodbyemsg <message>` | Set a custom goodbye message template. | `!setgoodbyemsg Goodbye {user}!` |
 | `!setupticket` | Launches the interactive wizard to set up the ticket panel. | `!setupticket` |
 
 ### 💰 Economy Commands
